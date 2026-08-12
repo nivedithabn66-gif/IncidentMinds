@@ -1,0 +1,1640 @@
+[
+  {
+    "session_id": "REAL-4DACA4",
+    "created_at": "2026-08-12T11:00:07.582629",
+    "source_type": "real_world_ingestion",
+    "files": [
+      {
+        "file_id": "file-0a9a",
+        "filename": "api-error.log",
+        "file_type": "log",
+        "file_size_bytes": 131,
+        "status": "parsed",
+        "error_message": null
+      },
+      {
+        "file_id": "file-e6c1",
+        "filename": "metrics.csv",
+        "file_type": "csv",
+        "file_size_bytes": 50,
+        "status": "parsed",
+        "error_message": null
+      }
+    ],
+    "service": "payment-api",
+    "incident_type": "database_connection_exhaustion",
+    "observed_facts": [
+      "Measured API response latency: 5.4 seconds."
+    ],
+    "inferences": [
+      "High probability of Database Connection Pool Exhaustion bottleneck."
+    ],
+    "symptoms": [
+      "API response latency: 5.4s"
+    ],
+    "metrics": {
+      "latency_sec": 5.4
+    },
+    "errors": [
+      "<untrusted_incident_evidence filename=\"api-error.log\">",
+      "2026-08-12 14:03:15 ERROR [payment-api] Connection pool exhausted: 98/100 active connections",
+      "HTTP 504 Gateway Timeout latency: 5.4s"
+    ],
+    "logs": [
+      "<untrusted_incident_evidence filename=\"api-error.log\">",
+      "2026-08-12 14:03:15 ERROR [payment-api] Connection pool exhausted: 98/100 active connections",
+      "HTTP 504 Gateway Timeout latency: 5.4s"
+    ],
+    "deployments": [],
+    "timestamps": [
+      "14:03:15"
+    ],
+    "possible_causes": [
+      "Database connection pool exhaustion"
+    ],
+    "raw_evidence_summary": "Real incident evidence extracted for service 'payment-api'. Observed 1 verified facts and 3 error logs. Extracted metrics: {'latency_sec': 5.4}.",
+    "truncated": false,
+    "secrets_redacted_count": 0,
+    "status": "resolved",
+    "investigation_history": [
+      {
+        "timestamp": "2026-08-12T11:00:09.892996",
+        "action_name": "Inspect Database Connection Pool",
+        "type": "simulation_only",
+        "simulation_result": "Simulation output: Diagnosed 'Inspect Database Connection Pool'. DB connection pool queue length is 142 requests. Limit is 100.",
+        "impact": "Identified connection pool exhaustion bottleneck."
+      }
+    ],
+    "hindsight_memories_recalled": [
+      {
+        "memory_id": "mem_INC-1042",
+        "incident_id": "INC-1042",
+        "title": "Incident INC-1042: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume exceeding pool capacity limit of 100 connections.",
+        "resolution": "Increased max database connection pool limit to 300 and updated connection timeout threshold.",
+        "lesson_learned": "High API latency combined with high DB connection utilization (>95%) should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1087",
+        "incident_id": "INC-1087",
+        "title": "Incident INC-1087: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Expanded max database connection pool limit to 300 connections and adjusted connection queue timeout."
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded max database connection pool limit to 300 connections and adjusted connection queue timeout.",
+        "lesson_learned": "High API response latency combined with high DB connection utilization (>95%) requires immediate DB connection pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1011",
+        "incident_id": "INC-1011",
+        "title": "Incident INC-1011: High Latency & DB Saturation",
+        "service": "auth-gateway",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect Auth JWT Keys & Secret Rotation"
+        ],
+        "root_cause": "Kubernetes secret vault failed to distribute rotated RS256 public key to auth-gateway replicas.",
+        "resolution": "Applied force sync on auth-vault secrets operator and restarted secret watcher daemon.",
+        "lesson_learned": "HTTP 401 authorization spikes following secret deployment indicate key sync mismatch, not pod replica exhaustion.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      }
+    ],
+    "recalled_memory_source": "hindsight_cloud",
+    "ai_assessment": {
+      "summary_assessment": "IncidentMind analyzed uploaded evidence for 'payment-api'. Detected 1 verified facts.",
+      "top_match": {
+        "memory_id": "mem_INC-1042",
+        "incident_id": "INC-1042",
+        "title": "Incident INC-1042: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume exceeding pool capacity limit of 100 connections.",
+        "resolution": "Increased max database connection pool limit to 300 and updated connection timeout threshold.",
+        "lesson_learned": "High API latency combined with high DB connection utilization (>95%) should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      "recommended_next_step": {
+        "action_id": "sim_check_db_pool",
+        "action_name": "[Simulate: Inspect DB Connection Pool]",
+        "simulation_only": true,
+        "why": "Prioritized based on historical Hindsight match (INC-1042) where this fix resolved identical symptoms.",
+        "avoid_failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ]
+      },
+      "why_this_recommendation": {
+        "observed_evidence": [
+          "Measured API response latency: 5.4 seconds."
+        ],
+        "historical_evidence": [
+          "Incident INC-1042: High Latency & DB Saturation",
+          "Incident INC-1087: High Latency & DB Saturation",
+          "Incident INC-1011: High Latency & DB Saturation"
+        ],
+        "failed_approaches_avoided": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "conclusion": "Prioritized based on historical Hindsight match (INC-1042) where this fix resolved identical symptoms."
+      }
+    },
+    "outcome_confirmed": {
+      "status": "confirmed_root_cause",
+      "confirmed_root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+      "actual_resolution": "Expanded connection pool limit to 300.",
+      "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+      "confirmed_at": "2026-08-12T11:00:09.894699"
+    },
+    "memory_stored": true
+  },
+  {
+    "session_id": "REAL-E508E7",
+    "created_at": "2026-08-12T11:02:40.354626",
+    "source_type": "real_world_ingestion",
+    "files": [
+      {
+        "file_id": "file-2cb8",
+        "filename": "api-error.log",
+        "file_type": "log",
+        "file_size_bytes": 131,
+        "status": "parsed",
+        "error_message": null
+      },
+      {
+        "file_id": "file-1d7a",
+        "filename": "metrics.csv",
+        "file_type": "csv",
+        "file_size_bytes": 50,
+        "status": "parsed",
+        "error_message": null
+      }
+    ],
+    "service": "payment-api",
+    "incident_type": "database_connection_exhaustion",
+    "observed_facts": [
+      "Measured API response latency: 5.4 seconds."
+    ],
+    "inferences": [
+      "High probability of Database Connection Pool Exhaustion bottleneck."
+    ],
+    "symptoms": [
+      "API response latency: 5.4s"
+    ],
+    "metrics": {
+      "latency_sec": 5.4
+    },
+    "errors": [
+      "<untrusted_incident_evidence filename=\"api-error.log\">",
+      "2026-08-12 14:03:15 ERROR [payment-api] Connection pool exhausted: 98/100 active connections",
+      "HTTP 504 Gateway Timeout latency: 5.4s"
+    ],
+    "logs": [
+      "<untrusted_incident_evidence filename=\"api-error.log\">",
+      "2026-08-12 14:03:15 ERROR [payment-api] Connection pool exhausted: 98/100 active connections",
+      "HTTP 504 Gateway Timeout latency: 5.4s"
+    ],
+    "deployments": [],
+    "timestamps": [
+      "14:03:15"
+    ],
+    "possible_causes": [
+      "Database connection pool exhaustion"
+    ],
+    "raw_evidence_summary": "Real incident evidence extracted for service 'payment-api'. Observed 1 verified facts and 3 error logs. Extracted metrics: {'latency_sec': 5.4}.",
+    "truncated": false,
+    "secrets_redacted_count": 0,
+    "status": "resolved",
+    "investigation_history": [
+      {
+        "timestamp": "2026-08-12T11:02:42.665325",
+        "action_name": "Inspect Database Connection Pool",
+        "type": "simulation_only",
+        "simulation_result": "Simulation output: Diagnosed 'Inspect Database Connection Pool'. DB connection pool queue length is 142 requests. Limit is 100.",
+        "impact": "Identified connection pool exhaustion bottleneck."
+      }
+    ],
+    "hindsight_memories_recalled": [
+      {
+        "memory_id": "mem_REAL-4DACA4",
+        "incident_id": "REAL-4DACA4",
+        "title": "Incident REAL-4DACA4: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.75,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "api response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1042",
+        "incident_id": "INC-1042",
+        "title": "Incident INC-1042: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume exceeding pool capacity limit of 100 connections.",
+        "resolution": "Increased max database connection pool limit to 300 and updated connection timeout threshold.",
+        "lesson_learned": "High API latency combined with high DB connection utilization (>95%) should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1087",
+        "incident_id": "INC-1087",
+        "title": "Incident INC-1087: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Scaled pool to 300"
+        ],
+        "root_cause": "Connection pool limits",
+        "resolution": "Scaled pool to 300",
+        "lesson_learned": "Check DB pool early during latency spikes",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1011",
+        "incident_id": "INC-1011",
+        "title": "Incident INC-1011: High Latency & DB Saturation",
+        "service": "auth-gateway",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect Auth JWT Keys & Secret Rotation"
+        ],
+        "root_cause": "Kubernetes secret vault failed to distribute rotated RS256 public key to auth-gateway replicas.",
+        "resolution": "Applied force sync on auth-vault secrets operator and restarted secret watcher daemon.",
+        "lesson_learned": "HTTP 401 authorization spikes following secret deployment indicate key sync mismatch, not pod replica exhaustion.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      }
+    ],
+    "recalled_memory_source": "hindsight_cloud",
+    "ai_assessment": {
+      "summary_assessment": "IncidentMind analyzed uploaded evidence for 'payment-api'. Detected 1 verified facts.",
+      "top_match": {
+        "memory_id": "mem_REAL-4DACA4",
+        "incident_id": "REAL-4DACA4",
+        "title": "Incident REAL-4DACA4: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.75,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "api response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      "recommended_next_step": {
+        "action_id": "sim_check_db_pool",
+        "action_name": "[Simulate: Inspect DB Connection Pool]",
+        "simulation_only": true,
+        "why": "Prioritized based on historical Hindsight match (REAL-4DACA4) where this fix resolved identical symptoms.",
+        "avoid_failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ]
+      },
+      "why_this_recommendation": {
+        "observed_evidence": [
+          "Measured API response latency: 5.4 seconds."
+        ],
+        "historical_evidence": [
+          "Incident REAL-4DACA4: High Latency & DB Saturation",
+          "Incident INC-1042: High Latency & DB Saturation",
+          "Incident INC-1087: High Latency & DB Saturation",
+          "Incident INC-1011: High Latency & DB Saturation"
+        ],
+        "failed_approaches_avoided": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "conclusion": "Prioritized based on historical Hindsight match (REAL-4DACA4) where this fix resolved identical symptoms."
+      }
+    },
+    "outcome_confirmed": {
+      "status": "confirmed_root_cause",
+      "confirmed_root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+      "actual_resolution": "Expanded connection pool limit to 300.",
+      "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+      "confirmed_at": "2026-08-12T11:02:42.668147"
+    },
+    "memory_stored": true
+  },
+  {
+    "session_id": "REAL-F9646F",
+    "created_at": "2026-08-12T11:05:23.545299",
+    "source_type": "real_world_ingestion",
+    "files": [
+      {
+        "file_id": "file-ebb9",
+        "filename": "api.log",
+        "file_type": "log",
+        "file_size_bytes": 64,
+        "status": "parsed",
+        "error_message": null
+      }
+    ],
+    "service": "payment-api",
+    "incident_type": "database_connection_exhaustion",
+    "observed_facts": [
+      "Uploaded evidence contains 3 log/data lines.",
+      "Detected 1 critical error/warning log entries."
+    ],
+    "inferences": [
+      "High probability of Database Connection Pool Exhaustion bottleneck."
+    ],
+    "symptoms": [
+      "High response latency",
+      "Upstream 504 timeouts"
+    ],
+    "metrics": {
+      "latency_sec": 5.2,
+      "db_conn_pct": 98.0,
+      "error_rate_pct": 12.0
+    },
+    "errors": [
+      "2026-08-12 ERROR [payment-api] Connection pool exhausted: 98/100"
+    ],
+    "logs": [
+      "2026-08-12 ERROR [payment-api] Connection pool exhausted: 98/100"
+    ],
+    "deployments": [],
+    "timestamps": [],
+    "possible_causes": [
+      "Database connection pool exhaustion"
+    ],
+    "raw_evidence_summary": "Real incident evidence extracted for service 'payment-api'. Observed 2 verified facts and 1 error logs. Extracted metrics: {}.",
+    "truncated": false,
+    "secrets_redacted_count": 0,
+    "status": "resolved",
+    "investigation_history": [],
+    "hindsight_memories_recalled": [
+      {
+        "memory_id": "mem_INC-1042",
+        "incident_id": "INC-1042",
+        "title": "Incident INC-1042: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume exceeding pool capacity limit of 100 connections.",
+        "resolution": "Increased max database connection pool limit to 300 and updated connection timeout threshold.",
+        "lesson_learned": "High API latency combined with high DB connection utilization (>95%) should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1087",
+        "incident_id": "INC-1087",
+        "title": "Incident INC-1087: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Scaled pool to 300"
+        ],
+        "root_cause": "Connection pool limits",
+        "resolution": "Scaled pool to 300",
+        "lesson_learned": "Check DB pool early during latency spikes",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1011",
+        "incident_id": "INC-1011",
+        "title": "Incident INC-1011: High Latency & DB Saturation",
+        "service": "auth-gateway",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect Auth JWT Keys & Secret Rotation"
+        ],
+        "root_cause": "Kubernetes secret vault failed to distribute rotated RS256 public key to auth-gateway replicas.",
+        "resolution": "Applied force sync on auth-vault secrets operator and restarted secret watcher daemon.",
+        "lesson_learned": "HTTP 401 authorization spikes following secret deployment indicate key sync mismatch, not pod replica exhaustion.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_REAL-4DACA4",
+        "incident_id": "REAL-4DACA4",
+        "title": "Incident REAL-4DACA4: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_REAL-E508E7",
+        "incident_id": "REAL-E508E7",
+        "title": "Incident REAL-E508E7: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      }
+    ],
+    "recalled_memory_source": "hindsight_cloud",
+    "ai_assessment": {
+      "summary_assessment": "IncidentMind analyzed uploaded evidence for 'payment-api'. Detected 2 verified facts.",
+      "top_match": {
+        "memory_id": "mem_INC-1042",
+        "incident_id": "INC-1042",
+        "title": "Incident INC-1042: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume exceeding pool capacity limit of 100 connections.",
+        "resolution": "Increased max database connection pool limit to 300 and updated connection timeout threshold.",
+        "lesson_learned": "High API latency combined with high DB connection utilization (>95%) should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      "recommended_next_step": {
+        "action_id": "sim_check_db_pool",
+        "action_name": "[Simulate: Inspect DB Connection Pool]",
+        "simulation_only": true,
+        "why": "Prioritized based on historical Hindsight match (INC-1042) where this fix resolved identical symptoms.",
+        "avoid_failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ]
+      },
+      "why_this_recommendation": {
+        "observed_evidence": [
+          "Uploaded evidence contains 3 log/data lines.",
+          "Detected 1 critical error/warning log entries."
+        ],
+        "historical_evidence": [
+          "Incident INC-1042: High Latency & DB Saturation",
+          "Incident INC-1087: High Latency & DB Saturation",
+          "Incident INC-1011: High Latency & DB Saturation",
+          "Incident REAL-4DACA4: High Latency & DB Saturation",
+          "Incident REAL-E508E7: High Latency & DB Saturation"
+        ],
+        "failed_approaches_avoided": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "conclusion": "Prioritized based on historical Hindsight match (INC-1042) where this fix resolved identical symptoms."
+      }
+    },
+    "outcome_confirmed": {
+      "status": "confirmed_root_cause",
+      "confirmed_root_cause": "DB pool exhaustion",
+      "actual_resolution": "Expanded pool to 300",
+      "lesson_learned": "High latency requires DB pool check",
+      "confirmed_at": "2026-08-12T11:05:49.264336"
+    },
+    "memory_stored": true
+  },
+  {
+    "session_id": "REAL-347BCB",
+    "created_at": "2026-08-12T11:09:12.864401",
+    "source_type": "real_world_ingestion",
+    "files": [
+      {
+        "file_id": "file-f49a",
+        "filename": "IncidentMind_real_incident_test.zip",
+        "file_type": "zip",
+        "file_size_bytes": 2257,
+        "status": "error",
+        "error_message": "Unsupported file format '.zip'. Allowed formats: .txt, .log, .csv, .json, .md, .pdf."
+      }
+    ],
+    "service": "payment-api",
+    "incident_type": "performance_degradation",
+    "observed_facts": [
+      "Uploaded evidence contains 0 log/data lines."
+    ],
+    "inferences": [
+      "Possible upstream service container or cache capacity bottleneck."
+    ],
+    "symptoms": [
+      "High response latency",
+      "Upstream 504 timeouts"
+    ],
+    "metrics": {
+      "latency_sec": 5.2,
+      "db_conn_pct": 98.0,
+      "error_rate_pct": 12.0
+    },
+    "errors": [],
+    "logs": [],
+    "deployments": [],
+    "timestamps": [],
+    "possible_causes": [
+      "Upstream latency bottleneck"
+    ],
+    "raw_evidence_summary": "Real incident evidence extracted for service 'payment-api'. Observed 1 verified facts and 0 error logs. Extracted metrics: {}.",
+    "truncated": false,
+    "secrets_redacted_count": 0,
+    "status": "analyzed",
+    "investigation_history": [],
+    "hindsight_memories_recalled": [
+      {
+        "memory_id": "mem_REAL-F9646F",
+        "incident_id": "REAL-F9646F",
+        "title": "Incident REAL-F9646F: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.91,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "high response latency",
+          "upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "DB pool exhaustion",
+        "resolution": "Expanded pool to 300",
+        "lesson_learned": "High latency requires DB pool check",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1042",
+        "incident_id": "INC-1042",
+        "title": "Incident INC-1042: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume exceeding pool capacity limit of 100 connections.",
+        "resolution": "Increased max database connection pool limit to 300 and updated connection timeout threshold.",
+        "lesson_learned": "High API latency combined with high DB connection utilization (>95%) should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1087",
+        "incident_id": "INC-1087",
+        "title": "Incident INC-1087: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Scaled pool to 300"
+        ],
+        "root_cause": "Connection pool limits",
+        "resolution": "Scaled pool to 300",
+        "lesson_learned": "Check DB pool early during latency spikes",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1011",
+        "incident_id": "INC-1011",
+        "title": "Incident INC-1011: High Latency & DB Saturation",
+        "service": "auth-gateway",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect Auth JWT Keys & Secret Rotation"
+        ],
+        "root_cause": "Kubernetes secret vault failed to distribute rotated RS256 public key to auth-gateway replicas.",
+        "resolution": "Applied force sync on auth-vault secrets operator and restarted secret watcher daemon.",
+        "lesson_learned": "HTTP 401 authorization spikes following secret deployment indicate key sync mismatch, not pod replica exhaustion.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_REAL-4DACA4",
+        "incident_id": "REAL-4DACA4",
+        "title": "Incident REAL-4DACA4: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_REAL-E508E7",
+        "incident_id": "REAL-E508E7",
+        "title": "Incident REAL-E508E7: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      }
+    ],
+    "recalled_memory_source": "hindsight_cloud",
+    "ai_assessment": {
+      "summary_assessment": "IncidentMind analyzed uploaded evidence for 'payment-api'. Detected 1 verified facts.",
+      "top_match": {
+        "memory_id": "mem_REAL-F9646F",
+        "incident_id": "REAL-F9646F",
+        "title": "Incident REAL-F9646F: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.91,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "high response latency",
+          "upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "DB pool exhaustion",
+        "resolution": "Expanded pool to 300",
+        "lesson_learned": "High latency requires DB pool check",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      "recommended_next_step": {
+        "action_id": "sim_check_db_pool",
+        "action_name": "[Simulate: Inspect DB Connection Pool]",
+        "simulation_only": true,
+        "why": "Prioritized based on historical Hindsight match (REAL-F9646F) where this fix resolved identical symptoms.",
+        "avoid_failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ]
+      },
+      "why_this_recommendation": {
+        "observed_evidence": [
+          "Uploaded evidence contains 0 log/data lines."
+        ],
+        "historical_evidence": [
+          "Incident REAL-F9646F: High Latency & DB Saturation",
+          "Incident INC-1042: High Latency & DB Saturation",
+          "Incident INC-1087: High Latency & DB Saturation",
+          "Incident INC-1011: High Latency & DB Saturation",
+          "Incident REAL-4DACA4: High Latency & DB Saturation",
+          "Incident REAL-E508E7: High Latency & DB Saturation"
+        ],
+        "failed_approaches_avoided": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "conclusion": "Prioritized based on historical Hindsight match (REAL-F9646F) where this fix resolved identical symptoms."
+      }
+    },
+    "outcome_confirmed": null,
+    "memory_stored": false
+  },
+  {
+    "session_id": "REAL-3C4B2C",
+    "created_at": "2026-08-12T11:10:35.989157",
+    "source_type": "real_world_ingestion",
+    "files": [
+      {
+        "file_id": "file-053e",
+        "filename": "api-error.log",
+        "file_type": "log",
+        "file_size_bytes": 131,
+        "status": "parsed",
+        "error_message": null
+      },
+      {
+        "file_id": "file-16dd",
+        "filename": "metrics.csv",
+        "file_type": "csv",
+        "file_size_bytes": 82,
+        "status": "parsed",
+        "error_message": null
+      },
+      {
+        "file_id": "file-fb46",
+        "filename": "deployment.json",
+        "file_type": "json",
+        "file_size_bytes": 83,
+        "status": "parsed",
+        "error_message": null
+      }
+    ],
+    "service": "payment-api",
+    "incident_type": "database_connection_exhaustion",
+    "observed_facts": [
+      "Measured API response latency: 5.4 seconds."
+    ],
+    "inferences": [
+      "High probability of Database Connection Pool Exhaustion bottleneck."
+    ],
+    "symptoms": [
+      "API response latency: 5.4s"
+    ],
+    "metrics": {
+      "latency_sec": 5.4
+    },
+    "errors": [
+      "<untrusted_incident_evidence filename=\"api-error.log\">",
+      "2026-08-12 14:03:15 ERROR [payment-api] Connection pool exhausted: 98/100 active connections",
+      "HTTP 504 Gateway Timeout latency: 5.4s"
+    ],
+    "logs": [
+      "<untrusted_incident_evidence filename=\"api-error.log\">",
+      "2026-08-12 14:03:15 ERROR [payment-api] Connection pool exhausted: 98/100 active connections",
+      "HTTP 504 Gateway Timeout latency: 5.4s"
+    ],
+    "deployments": [],
+    "timestamps": [
+      "14:03:15",
+      "13:45"
+    ],
+    "possible_causes": [
+      "Database connection pool exhaustion"
+    ],
+    "raw_evidence_summary": "Real incident evidence extracted for service 'payment-api'. Observed 1 verified facts and 3 error logs. Extracted metrics: {'latency_sec': 5.4}.",
+    "truncated": false,
+    "secrets_redacted_count": 0,
+    "status": "analyzed",
+    "investigation_history": [],
+    "hindsight_memories_recalled": [
+      {
+        "memory_id": "mem_REAL-4DACA4",
+        "incident_id": "REAL-4DACA4",
+        "title": "Incident REAL-4DACA4: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.75,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "api response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_REAL-E508E7",
+        "incident_id": "REAL-E508E7",
+        "title": "Incident REAL-E508E7: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.75,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "api response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1042",
+        "incident_id": "INC-1042",
+        "title": "Incident INC-1042: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume exceeding pool capacity limit of 100 connections.",
+        "resolution": "Increased max database connection pool limit to 300 and updated connection timeout threshold.",
+        "lesson_learned": "High API latency combined with high DB connection utilization (>95%) should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1087",
+        "incident_id": "INC-1087",
+        "title": "Incident INC-1087: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Scaled pool to 300"
+        ],
+        "root_cause": "Connection pool limits",
+        "resolution": "Scaled pool to 300",
+        "lesson_learned": "Check DB pool early during latency spikes",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1011",
+        "incident_id": "INC-1011",
+        "title": "Incident INC-1011: High Latency & DB Saturation",
+        "service": "auth-gateway",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect Auth JWT Keys & Secret Rotation"
+        ],
+        "root_cause": "Kubernetes secret vault failed to distribute rotated RS256 public key to auth-gateway replicas.",
+        "resolution": "Applied force sync on auth-vault secrets operator and restarted secret watcher daemon.",
+        "lesson_learned": "HTTP 401 authorization spikes following secret deployment indicate key sync mismatch, not pod replica exhaustion.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_REAL-F9646F",
+        "incident_id": "REAL-F9646F",
+        "title": "Incident REAL-F9646F: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "DB pool exhaustion",
+        "resolution": "Expanded pool to 300",
+        "lesson_learned": "High latency requires DB pool check",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      }
+    ],
+    "recalled_memory_source": "hindsight_cloud",
+    "ai_assessment": {
+      "summary_assessment": "IncidentMind analyzed uploaded evidence for 'payment-api'. Detected 1 verified facts.",
+      "top_match": {
+        "memory_id": "mem_REAL-4DACA4",
+        "incident_id": "REAL-4DACA4",
+        "title": "Incident REAL-4DACA4: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.75,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "api response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      "recommended_next_step": {
+        "action_id": "sim_check_db_pool",
+        "action_name": "[Simulate: Inspect DB Connection Pool]",
+        "simulation_only": true,
+        "why": "Prioritized based on historical Hindsight match (REAL-4DACA4) where this fix resolved identical symptoms.",
+        "avoid_failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ]
+      },
+      "why_this_recommendation": {
+        "observed_evidence": [
+          "Measured API response latency: 5.4 seconds."
+        ],
+        "historical_evidence": [
+          "Incident REAL-4DACA4: High Latency & DB Saturation",
+          "Incident REAL-E508E7: High Latency & DB Saturation",
+          "Incident INC-1042: High Latency & DB Saturation",
+          "Incident INC-1087: High Latency & DB Saturation",
+          "Incident INC-1011: High Latency & DB Saturation",
+          "Incident REAL-F9646F: High Latency & DB Saturation"
+        ],
+        "failed_approaches_avoided": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "conclusion": "Prioritized based on historical Hindsight match (REAL-4DACA4) where this fix resolved identical symptoms."
+      }
+    },
+    "outcome_confirmed": null,
+    "memory_stored": false
+  },
+  {
+    "session_id": "REAL-8A00C9",
+    "created_at": "2026-08-12T14:46:29.689295",
+    "source_type": "real_world_ingestion",
+    "files": [
+      {
+        "file_id": "file-6572",
+        "filename": "api-error.log",
+        "file_type": "log",
+        "file_size_bytes": 131,
+        "status": "parsed",
+        "error_message": null
+      },
+      {
+        "file_id": "file-65ba",
+        "filename": "metrics.csv",
+        "file_type": "csv",
+        "file_size_bytes": 82,
+        "status": "parsed",
+        "error_message": null
+      },
+      {
+        "file_id": "file-54fb",
+        "filename": "deployment.json",
+        "file_type": "json",
+        "file_size_bytes": 83,
+        "status": "parsed",
+        "error_message": null
+      }
+    ],
+    "service": "payment-api",
+    "incident_type": "database_connection_exhaustion",
+    "observed_facts": [
+      "Measured API response latency: 5.4 seconds."
+    ],
+    "inferences": [
+      "High probability of Database Connection Pool Exhaustion bottleneck."
+    ],
+    "symptoms": [
+      "API response latency: 5.4s"
+    ],
+    "metrics": {
+      "latency_sec": 5.4
+    },
+    "errors": [
+      "<untrusted_incident_evidence filename=\"api-error.log\">",
+      "2026-08-12 14:03:15 ERROR [payment-api] Connection pool exhausted: 98/100 active connections",
+      "HTTP 504 Gateway Timeout latency: 5.4s"
+    ],
+    "logs": [
+      "<untrusted_incident_evidence filename=\"api-error.log\">",
+      "2026-08-12 14:03:15 ERROR [payment-api] Connection pool exhausted: 98/100 active connections",
+      "HTTP 504 Gateway Timeout latency: 5.4s"
+    ],
+    "deployments": [],
+    "timestamps": [
+      "14:03:15",
+      "13:45"
+    ],
+    "possible_causes": [
+      "Database connection pool exhaustion"
+    ],
+    "raw_evidence_summary": "Real incident evidence extracted for service 'payment-api'. Observed 1 verified facts and 3 error logs. Extracted metrics: {'latency_sec': 5.4}.",
+    "truncated": false,
+    "secrets_redacted_count": 0,
+    "status": "analyzed",
+    "investigation_history": [],
+    "hindsight_memories_recalled": [
+      {
+        "memory_id": "mem_REAL-4DACA4",
+        "incident_id": "REAL-4DACA4",
+        "title": "Incident REAL-4DACA4: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.75,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "api response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_REAL-E508E7",
+        "incident_id": "REAL-E508E7",
+        "title": "Incident REAL-E508E7: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.75,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "api response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1042",
+        "incident_id": "INC-1042",
+        "title": "Incident INC-1042: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume exceeding pool capacity limit of 100 connections.",
+        "resolution": "Increased max database connection pool limit to 300 and updated connection timeout threshold.",
+        "lesson_learned": "High API latency combined with high DB connection utilization (>95%) should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1087",
+        "incident_id": "INC-1087",
+        "title": "Incident INC-1087: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Increased max database connection pool limit from 100 to 300 connections."
+        ],
+        "root_cause": "Database connection pool exhaustion under concurrent checkout traffic.",
+        "resolution": "Increased max database connection pool limit from 100 to 300 connections.",
+        "lesson_learned": "High API latency combined with high DB connection utilization should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1011",
+        "incident_id": "INC-1011",
+        "title": "Incident INC-1011: High Latency & DB Saturation",
+        "service": "auth-gateway",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect Auth JWT Keys & Secret Rotation"
+        ],
+        "root_cause": "Kubernetes secret vault failed to distribute rotated RS256 public key to auth-gateway replicas.",
+        "resolution": "Applied force sync on auth-vault secrets operator and restarted secret watcher daemon.",
+        "lesson_learned": "HTTP 401 authorization spikes following secret deployment indicate key sync mismatch, not pod replica exhaustion.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_REAL-F9646F",
+        "incident_id": "REAL-F9646F",
+        "title": "Incident REAL-F9646F: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "API response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "DB pool exhaustion",
+        "resolution": "Expanded pool to 300",
+        "lesson_learned": "High latency requires DB pool check",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      }
+    ],
+    "recalled_memory_source": "hindsight_cloud",
+    "ai_assessment": {
+      "summary_assessment": "IncidentMind analyzed uploaded evidence for 'payment-api'. Detected 1 verified facts.",
+      "top_match": {
+        "memory_id": "mem_REAL-4DACA4",
+        "incident_id": "REAL-4DACA4",
+        "title": "Incident REAL-4DACA4: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.75,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "api response latency: 5.4s"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      "recommended_next_step": {
+        "action_id": "sim_check_db_pool",
+        "action_name": "[Simulate: Inspect DB Connection Pool]",
+        "simulation_only": true,
+        "why": "Prioritized based on historical Hindsight match (REAL-4DACA4) where this fix resolved identical symptoms.",
+        "avoid_failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ]
+      },
+      "why_this_recommendation": {
+        "observed_evidence": [
+          "Measured API response latency: 5.4 seconds."
+        ],
+        "historical_evidence": [
+          "Incident REAL-4DACA4: High Latency & DB Saturation",
+          "Incident REAL-E508E7: High Latency & DB Saturation",
+          "Incident INC-1042: High Latency & DB Saturation",
+          "Incident INC-1087: High Latency & DB Saturation",
+          "Incident INC-1011: High Latency & DB Saturation",
+          "Incident REAL-F9646F: High Latency & DB Saturation"
+        ],
+        "failed_approaches_avoided": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "conclusion": "Prioritized based on historical Hindsight match (REAL-4DACA4) where this fix resolved identical symptoms."
+      }
+    },
+    "outcome_confirmed": null,
+    "memory_stored": false
+  },
+  {
+    "session_id": "REAL-5FE8DF",
+    "created_at": "2026-08-12T15:04:26.299291",
+    "source_type": "real_world_ingestion",
+    "files": [
+      {
+        "file_id": "file-857b",
+        "filename": "IncidentMind_real_incident_test.zip",
+        "file_type": "zip",
+        "file_size_bytes": 2257,
+        "status": "error",
+        "error_message": "Unsupported file format '.zip'. Allowed formats: .txt, .log, .csv, .json, .md, .pdf."
+      }
+    ],
+    "service": "payment-api",
+    "incident_type": "performance_degradation",
+    "observed_facts": [
+      "Uploaded evidence contains 0 log/data lines."
+    ],
+    "inferences": [
+      "Possible upstream service container or cache capacity bottleneck."
+    ],
+    "symptoms": [
+      "High response latency",
+      "Upstream 504 timeouts"
+    ],
+    "metrics": {
+      "latency_sec": 5.2,
+      "db_conn_pct": 98.0,
+      "error_rate_pct": 12.0
+    },
+    "errors": [],
+    "logs": [],
+    "deployments": [],
+    "timestamps": [],
+    "possible_causes": [
+      "Upstream latency bottleneck"
+    ],
+    "raw_evidence_summary": "Real incident evidence extracted for service 'payment-api'. Observed 1 verified facts and 0 error logs. Extracted metrics: {}.",
+    "truncated": false,
+    "secrets_redacted_count": 0,
+    "status": "analyzed",
+    "investigation_history": [],
+    "hindsight_memories_recalled": [
+      {
+        "memory_id": "mem_REAL-F9646F",
+        "incident_id": "REAL-F9646F",
+        "title": "Incident REAL-F9646F: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.91,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "high response latency",
+          "upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "DB pool exhaustion",
+        "resolution": "Expanded pool to 300",
+        "lesson_learned": "High latency requires DB pool check",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1042",
+        "incident_id": "INC-1042",
+        "title": "Incident INC-1042: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume exceeding pool capacity limit of 100 connections.",
+        "resolution": "Increased max database connection pool limit to 300 and updated connection timeout threshold.",
+        "lesson_learned": "High API latency combined with high DB connection utilization (>95%) should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1087",
+        "incident_id": "INC-1087",
+        "title": "Incident INC-1087: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Increased max database connection pool limit from 100 to 300 connections."
+        ],
+        "root_cause": "Database connection pool exhaustion under concurrent checkout traffic.",
+        "resolution": "Increased max database connection pool limit from 100 to 300 connections.",
+        "lesson_learned": "High API latency combined with high DB connection utilization should trigger database connection pool investigation before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_INC-1011",
+        "incident_id": "INC-1011",
+        "title": "Incident INC-1011: High Latency & DB Saturation",
+        "service": "auth-gateway",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect Auth JWT Keys & Secret Rotation"
+        ],
+        "root_cause": "Kubernetes secret vault failed to distribute rotated RS256 public key to auth-gateway replicas.",
+        "resolution": "Applied force sync on auth-vault secrets operator and restarted secret watcher daemon.",
+        "lesson_learned": "HTTP 401 authorization spikes following secret deployment indicate key sync mismatch, not pod replica exhaustion.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_REAL-4DACA4",
+        "incident_id": "REAL-4DACA4",
+        "title": "Incident REAL-4DACA4: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      {
+        "memory_id": "mem_REAL-E508E7",
+        "incident_id": "REAL-E508E7",
+        "title": "Incident REAL-E508E7: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.5,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "High response latency",
+          "Upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+        "resolution": "Expanded connection pool limit to 300.",
+        "lesson_learned": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      }
+    ],
+    "recalled_memory_source": "hindsight_cloud",
+    "ai_assessment": {
+      "summary_assessment": "IncidentMind analyzed uploaded evidence for 'payment-api'. Detected 1 verified facts.",
+      "top_match": {
+        "memory_id": "mem_REAL-F9646F",
+        "incident_id": "REAL-F9646F",
+        "title": "Incident REAL-F9646F: High Latency & DB Saturation",
+        "service": "payment-api",
+        "similarity_score": 0.91,
+        "relevance_label": "Highly relevant historical experience",
+        "matched_symptoms": [
+          "high response latency",
+          "upstream 504 timeouts"
+        ],
+        "failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "successful_approaches": [
+          "Inspect DB Connection Pool"
+        ],
+        "root_cause": "DB pool exhaustion",
+        "resolution": "Expanded pool to 300",
+        "lesson_learned": "High latency requires DB pool check",
+        "source_label": "\ud83e\udde0 Hindsight Memory"
+      },
+      "recommended_next_step": {
+        "action_id": "sim_check_db_pool",
+        "action_name": "[Simulate: Inspect DB Connection Pool]",
+        "simulation_only": true,
+        "why": "Prioritized based on historical Hindsight match (REAL-F9646F) where this fix resolved identical symptoms.",
+        "avoid_failed_approaches": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ]
+      },
+      "why_this_recommendation": {
+        "observed_evidence": [
+          "Uploaded evidence contains 0 log/data lines."
+        ],
+        "historical_evidence": [
+          "Incident REAL-F9646F: High Latency & DB Saturation",
+          "Incident INC-1042: High Latency & DB Saturation",
+          "Incident INC-1087: High Latency & DB Saturation",
+          "Incident INC-1011: High Latency & DB Saturation",
+          "Incident REAL-4DACA4: High Latency & DB Saturation",
+          "Incident REAL-E508E7: High Latency & DB Saturation"
+        ],
+        "failed_approaches_avoided": [
+          "Increase Redis Cache Size",
+          "Restart API Service Containers"
+        ],
+        "conclusion": "Prioritized based on historical Hindsight match (REAL-F9646F) where this fix resolved identical symptoms."
+      }
+    },
+    "outcome_confirmed": null,
+    "memory_stored": false
+  }
+]

@@ -1,0 +1,12 @@
+{
+  "deployment_id": "dep-88492",
+  "service": "payment-api",
+  "version": "v2.4.5",
+  "deployed_at": "2026-08-12T13:45:00Z",
+  "environment": "production",
+  "changes": [
+    "Enabled promotion checkout worker concurrency",
+    "Updated database driver connection pool settings"
+  ],
+  "author": "devops-team"
+}

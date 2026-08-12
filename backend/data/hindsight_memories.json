@@ -1,0 +1,257 @@
+{
+  "experiences": [
+    {
+      "incident_id": "INC-1042",
+      "service": "payment-api",
+      "incident_type": "database_connection_exhaustion",
+      "symptoms": [
+        "API latency: 4.8 seconds",
+        "Error rate: 12%",
+        "Database connections: 98%",
+        "Recent deployment: v2.4.1"
+      ],
+      "metrics": {
+        "latency_sec": 4.8,
+        "error_rate_pct": 12.0,
+        "db_conn_pct": 98.0,
+        "cpu_pct": 45.0,
+        "memory_pct": 62.0
+      },
+      "recent_changes": [
+        "Deployed v2.4.0 checkout service"
+      ],
+      "investigation_action": "Inspect DB Connection Pool",
+      "action_result": "Found DB connection pool utilization at 98%. Scaled pool size to 300.",
+      "success_or_failure": "SUCCESS",
+      "root_cause": "Database connection pool exhaustion caused by high concurrent request volume exceeding pool capacity limit of 100 connections.",
+      "resolution": "Increased max database connection pool limit to 300 and updated connection timeout threshold.",
+      "lesson": "High API latency combined with high DB connection utilization (>95%) should trigger database connection pool investigation before cache scaling.",
+      "timestamp": "2026-08-12T10:14:00Z"
+    },
+    {
+      "incident_id": "INC-1087",
+      "service": "payment-api",
+      "incident_type": "database_connection_exhaustion",
+      "symptoms": [
+        "API latency: 5.1 seconds",
+        "Error rate: 11%",
+        "Database connections: 96%",
+        "Recent deployment: v2.4.3"
+      ],
+      "metrics": {
+        "latency_sec": 0.18,
+        "error_rate_pct": 0.01,
+        "db_conn_pct": 28,
+        "cpu_pct": 42.0,
+        "memory_pct": 58.0
+      },
+      "recent_changes": [
+        "Resolved database pool bottleneck"
+      ],
+      "investigation_action": "Increased max database connection pool limit from 100 to 300 connections.",
+      "action_result": "DB Connection Pool limit expanded to 300 connections. Latency normalized.",
+      "success_or_failure": "SUCCESS",
+      "root_cause": "Database connection pool exhaustion under concurrent checkout traffic.",
+      "resolution": "Increased max database connection pool limit from 100 to 300 connections.",
+      "lesson": "High API latency combined with high DB connection utilization should trigger database connection pool investigation before cache scaling.",
+      "timestamp": "2026-08-12T15:04:07.199594"
+    },
+    {
+      "incident_id": "INC-1011",
+      "service": "auth-gateway",
+      "incident_type": "jwt_secret_rotation_failure",
+      "symptoms": [
+        "HTTP 401 Authorization Spikes: 32%",
+        "JWT signature verification failed",
+        "Recent deployment: rotated secrets"
+      ],
+      "metrics": {
+        "latency_sec": 1.2,
+        "error_rate_pct": 32.0,
+        "db_conn_pct": 22.0,
+        "cpu_pct": 35.0,
+        "memory_pct": 40.0
+      },
+      "recent_changes": [
+        "Rotated auth signing secrets in Kubernetes secret vault"
+      ],
+      "investigation_action": "Inspect Auth JWT Keys & Secret Rotation",
+      "action_result": "Synchronized RS256 public key secret across auth gateway pods.",
+      "success_or_failure": "SUCCESS",
+      "root_cause": "Kubernetes secret vault failed to distribute rotated RS256 public key to auth-gateway replicas.",
+      "resolution": "Applied force sync on auth-vault secrets operator and restarted secret watcher daemon.",
+      "lesson": "HTTP 401 authorization spikes following secret deployment indicate key sync mismatch, not pod replica exhaustion.",
+      "timestamp": "2026-07-28T09:15:00Z"
+    },
+    {
+      "incident_id": "REAL-4DACA4",
+      "service": "payment-api",
+      "incident_type": "database_connection_exhaustion",
+      "symptoms": [
+        "API response latency: 5.4s"
+      ],
+      "metrics": {
+        "latency_sec": 5.4
+      },
+      "recent_changes": [],
+      "investigation_action": "Inspect DB Connection Pool",
+      "action_result": "Expanded connection pool limit to 300.",
+      "success_or_failure": "SUCCESS",
+      "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+      "resolution": "Expanded connection pool limit to 300.",
+      "lesson": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+      "timestamp": "2026-08-12T11:00:09.894777"
+    },
+    {
+      "incident_id": "REAL-E508E7",
+      "service": "payment-api",
+      "incident_type": "database_connection_exhaustion",
+      "symptoms": [
+        "API response latency: 5.4s"
+      ],
+      "metrics": {
+        "latency_sec": 5.4
+      },
+      "recent_changes": [],
+      "investigation_action": "Inspect DB Connection Pool",
+      "action_result": "Expanded connection pool limit to 300.",
+      "success_or_failure": "SUCCESS",
+      "root_cause": "Database connection pool exhaustion caused by high concurrent request volume.",
+      "resolution": "Expanded connection pool limit to 300.",
+      "lesson": "High latency + high DB connection saturation requires DB pool inspection before cache scaling.",
+      "timestamp": "2026-08-12T11:02:42.668233"
+    },
+    {
+      "incident_id": "REAL-F9646F",
+      "service": "payment-api",
+      "incident_type": "database_connection_exhaustion",
+      "symptoms": [
+        "High response latency",
+        "Upstream 504 timeouts"
+      ],
+      "metrics": {
+        "latency_sec": 5.2,
+        "db_conn_pct": 98.0,
+        "error_rate_pct": 12.0
+      },
+      "recent_changes": [],
+      "investigation_action": "Inspect DB Connection Pool",
+      "action_result": "Expanded pool to 300",
+      "success_or_failure": "SUCCESS",
+      "root_cause": "DB pool exhaustion",
+      "resolution": "Expanded pool to 300",
+      "lesson": "High latency requires DB pool check",
+      "timestamp": "2026-08-12T11:05:49.264377"
+    }
+  ],
+  "learned_patterns": [
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "Check DB pool early during latency spikes",
+      "timestamp": "2026-08-12T10:21:00.221281"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "Check DB pool early during latency spikes",
+      "timestamp": "2026-08-12T10:23:12.864050"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "Check DB pool early during latency spikes",
+      "timestamp": "2026-08-12T10:26:49.380569"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API response latency combined with high DB connection utilization (>95%) requires immediate DB connection pool inspection before cache scaling.",
+      "timestamp": "2026-08-12T10:37:06.469095"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API response latency combined with high DB connection utilization (>95%) requires immediate DB connection pool inspection before cache scaling.",
+      "timestamp": "2026-08-12T10:37:17.815624"
+    },
+    {
+      "pattern_id": "pattern_INC-1042",
+      "trigger": "API latency: 4.8 seconds, Error rate: 12%, Database connections: 98%, Recent deployment: v2.4.1",
+      "key_takeaway": "High API response latency combined with high DB connection utilization (>95%) requires immediate DB connection pool inspection before cache scaling.",
+      "timestamp": "2026-08-12T10:44:55.244388"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API response latency combined with high DB connection utilization (>95%) requires immediate DB connection pool inspection before cache scaling.",
+      "timestamp": "2026-08-12T10:49:04.669101"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API latency combined with high DB connection utilization should trigger database connection pool investigation before cache scaling.",
+      "timestamp": "2026-08-12T10:50:47.366547"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API latency combined with high DB connection utilization should trigger database connection pool investigation before cache scaling.",
+      "timestamp": "2026-08-12T10:51:15.347211"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API response latency combined with high DB connection utilization (>95%) requires immediate DB connection pool inspection before cache scaling.",
+      "timestamp": "2026-08-12T10:51:26.394196"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API latency combined with high DB connection utilization should trigger database connection pool investigation before cache scaling.",
+      "timestamp": "2026-08-12T10:51:34.090798"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API response latency combined with high DB connection utilization (>95%) requires immediate DB connection pool inspection before cache scaling.",
+      "timestamp": "2026-08-12T10:51:42.948168"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API latency combined with high DB connection utilization should trigger database connection pool investigation before cache scaling.",
+      "timestamp": "2026-08-12T10:51:51.859899"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API response latency combined with high DB connection utilization (>95%) requires immediate DB connection pool inspection before cache scaling.",
+      "timestamp": "2026-08-12T10:52:03.129790"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "Check DB pool early during latency spikes",
+      "timestamp": "2026-08-12T11:02:33.473734"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API latency combined with high DB connection utilization should trigger database connection pool investigation before cache scaling.",
+      "timestamp": "2026-08-12T11:18:06.827447"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API latency combined with high DB connection utilization should trigger database connection pool investigation before cache scaling.",
+      "timestamp": "2026-08-12T15:02:40.753711"
+    },
+    {
+      "pattern_id": "pattern_INC-1087",
+      "trigger": "API latency: 5.1 seconds, Error rate: 11%, Database connections: 96%, Recent deployment: v2.4.3",
+      "key_takeaway": "High API latency combined with high DB connection utilization should trigger database connection pool investigation before cache scaling.",
+      "timestamp": "2026-08-12T15:04:07.213987"
+    }
+  ]
+}

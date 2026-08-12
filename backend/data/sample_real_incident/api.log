@@ -1,0 +1,6 @@
+2026-08-12 14:02:10 INFO [payment-api] Starting health check worker v2.4.5
+2026-08-12 14:03:15 ERROR [payment-api] Connection pool exhausted: 98/100 active connections in checkout-db-pool
+2026-08-12 14:03:20 WARN [payment-api] DB query queue length: 154 requests waiting in pool queue
+2026-08-12 14:03:25 ERROR [payment-api] HTTP 504 Gateway Timeout on /v1/charge - response_time=5420ms
+2026-08-12 14:03:30 ERROR [payment-api] HTTP 502 Bad Gateway upstream database socket timeout
+2026-08-12 14:04:00 WARN [payment-api] High latency alert: P99 response time 5.42 seconds
